@@ -1255,8 +1255,38 @@ def CheckAndUpdate():
     X=NeedUpdate(ANS)
 
     if X:
+    # visualizes au Updating message
+        try:
+            setCursor(False) #disables cursor
+            img = Image.open('/home/pi/local_packages/owl.png')
+            displayImage(img)
+            writeText("Updating System",color,(180,20),0) # welcome message
+            writeText("Software",color,(230,20),0)
+            writeText("Please wait..",color,(280,20),0)
+        except Exception as e:
+            print("Exception while trying to write to screen")
+            print(e)
+            pass
+        # download software and change symlink
         DownloadAvailableFile(ANS)
         UpdateSymlink()
+        # message and reboot
+        try:
+            setCursor(False) #disables cursor
+            img = Image.open('/home/pi/local_packages/owl.png')
+            displayImage(img)
+            writeText("Update Ok",color,(180,20),0) # welcome message
+            writeText("Rebooting...",color,(230,20),0)
+        except Exception as e:
+            print("Exception while trying to write to screen")
+            print(e)
+            pass
+        # reboot
+            try:
+                subprocess.run(["systemctl", "reboot"], check=True)
+            except Exception as e:
+                print(f"Reboot failed: {e}")
+
 
 # END AUTOUPDATER
 
