@@ -441,6 +441,8 @@ input:checked + .slider:before {
             d="STOPPRINT"> STOP PRINT </button>
             <button type="button button3" disabled class="button button3" 
             id="ABORTPRINT"> ABORT PRINT </button>
+            <button type="button button3" class="button button3" 
+            id="SHUTDOWN"> SHUTDOWN SYSTEM </button>
             
         </div>
     </div>
@@ -548,6 +550,7 @@ function openPage(pageName,elmnt,color) {
 document.getElementById("defaultOpen").click();
 // Setup the reaction functions for each page element
 document.getElementById("STARTPRINT").onclick = send_data;
+document.getElementById("SHUTDOWN").onclick = send_data;
 document.getElementById("PUMPSTATE").onclick = send_data;
 document.getElementById("PUMPDIR").onclick = send_data;
 document.getElementById("PUMPSPEED").onchange = send_data;
@@ -695,7 +698,9 @@ function send_data(){
 		// print controls
         case "STARTPRINT":
         ws.send("START_PRINT: "+"COMMAND")
-        //alert("PRESSED: "+window.event.target.id+" WITH TARGET: "+document.getElementById("PRINTABLEFILES").value);
+        case "SHUTDOWN":
+        ws.send("SHUTDOWN_SYSTEM: "+"COMMAND")
+        //alert("PRESSED: "+window.event.target.id);
         break ;
         case "PRINTABLEFILES":
         ws.send("SELECT: "+document.getElementById("PRINTABLEFILES").value)
