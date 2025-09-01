@@ -29,6 +29,8 @@ PREFERRED_IFACES = ("wlan0", "uap0", "ap0", "eth0")  # adjust to your setup
 # version control
 #print("Version 9 May 2025 17:00")
 print("Version 1st September 2025 15:50")
+print("Symlink path:", __file__)
+print("Resolved path:", os.path.realpath(__file__))
 
 # Here we want to send continuously data to a client using websockets and, at the same time,
 # receive and manage the messages being sent by the client to the server via the same channel.
@@ -1262,6 +1264,14 @@ async def main(): # this will contain the main controller logic
     color=0b0000011111111111
     #color=0b0000011111100000
     print("Main is running: invoking get_ip_address")
+    try:
+        version=os.path.realpath(__file__)
+        version=version.split('Websocket_Backend_4_')[-1]
+        version=version.split('.')[0]
+        writeText(version, color, (30, 20), 0)
+        sleep(3)
+    except:
+        pass
     ip=get_ip_address()
     ip_string="my IP is: "+str(ip)
     print("get_ip_address returned ",ip_string)
