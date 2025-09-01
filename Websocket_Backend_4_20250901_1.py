@@ -1253,6 +1253,7 @@ def CheckAndUpdate():
     ANS=GetAvailableFile()
     print("Available remote files: ",ANS)
     X=NeedUpdate(ANS)
+    color=0b0000011111111111
 
     if X:
     # visualizes au Updating message
