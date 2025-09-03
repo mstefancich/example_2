@@ -698,7 +698,9 @@ function send_data(){
 		// print controls
         case "STARTPRINT":
         ws.send("START_PRINT: "+"COMMAND")
-        case "SHUTDOWN":
+        break ;
+        // shutdown command
+		case "SHUTDOWN":
         ws.send("SHUTDOWN_SYSTEM: "+"COMMAND")
         //alert("PRESSED: "+window.event.target.id);
         break ;
