@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {box-sizing: border-box}
+
+/* Set height of body and the document to 100% */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial;
+}
+
+/* Style tab links */
+/* width must be 25% if 4 tabs are present*/
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 25%;
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  color: white;
+  display: none;
+  padding: 50px 20px;
+  height: 100%;
+}
+
+#Control {background-color: #ABB2B9 ;} /* old color #E688F5 */
+#Files_manager {background-color: #B2BABB;} /* old color #25BC91 */
+#Print {background-color: #B2BABB;} /* old color #25BC91 */
+#WiFi {background-color: #B2BABB;} /* old color #25BC91 */
+/* #Contact {background-color: blue;} */
+/* #About {background-color: orange;} */
+
+table { 
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 50%;
+  position: relative;
+  left: 100px;
+}
+
+td, th {
+  text-align: center;
+  padding: 6px;
+  border: 1px solid #2E86C1;
+  border: none
+}
+
+textarea {
+  resize: none;
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+  padding: 8px;
+}
+
+h3 {
+  color: black;
+}
+
+.small_button {
+  font-size: 16px;
+  text-align: center;
+  vertical-align: middle;
+  color: white;
+  border: 20px;
+  background-color: #58D68D;
+  height:30px;
+  width: 115px;
+}
+
+.small_button:hover {
+  background-color: #3498DB;
+}
+
+.mid_button {
+  border: none;
+  color: white;
+  padding: 25px 42px;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 6px 12px;
+  cursor: pointer;
+  background-color: #58D68D;
+}  
+
+.button {
+  border: none;
+  color: white;
+  padding: 25px 42px;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 6px 12px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #3498DB;
+}
+
+.button:disabled {
+  background-color: #EBEDEF;
+}
+
+.button1 {background-color: #04AA6D;} /* Green */
+.button2 {background-color: #008CBA;} /* Blue */
+.button3 {background-color: Tomato;}
+
+.grid-container {
+  display: grid;
+  text-align: center;
+  vertical-align: middle;
+  grid-template-columns: 30% 13% 13% 13% 30%;
+}
+
+.container { 
+  height: 200px;
+  position: relative;
+  border: 3px solid green; 
+  margin: 5px;
+}
+.container1 { 
+  height: 100px;
+  position: relative;
+  border: 3px solid green; 
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 24px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 19px;
+  width: 19px;
+  left: 8px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  value:"ON";
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(46px);
+  -ms-transform: translateX(46px);
+  transform: translateX(46px);
+  value:"OFF" ;
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+/* Added on August 11th 2025 for the WiFi selection window */
+/* select, input { padding: 6px; font-size: 1rem; margin-top: 4px; } */
+/* button { margin-top: 12px; padding: 8px 12px; font-size: 1rem; } */
+
+/* Added Sept 6th for converter software setup */
+    fieldset { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; }
+    label { display: block; margin: .5rem 0 .25rem; font-weight: 600; }
+    /* input { width: 100%; padding: .5rem; font-size: 1rem; } */
+    /* button { padding: .6rem 1rem; font-size: 1rem; border-radius: 8px; border: 0; cursor: pointer; } */
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .status { margin: .75rem 0 1rem; font-size: .95rem; }
+    .log { width: 100%; height: 140px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+.toggle-wrapper {
+  display: flex;   /* inline so it sits nicely in flow/table cells */
+  align-items: center;
+  gap: 1rem;
+  margin: 0.5rem 0;
+  white-space: nowrap;    /* prevent Fwd / switch / Rev from wrapping */
+}
+
+/* Accessibility-friendly: don't use display:none on the input */
+.toggle-switch input {
+  opacity: 0; width: 0; height: 0; position: absolute;
+}
+
+.toggle-label {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 80px;   /* wider = more visible */
+  height: 20px;
+}
+
+.toggle-switch input {
+  display: none; /* hide default checkbox */
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 40px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: #2196F3;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(60px); /* move knob right */
+}
+
+#preview { /* style for the image in the FilesManager tab */
+  max-width: 100%;   /* shrink to fit container width */
+  height: auto;      /* keep aspect ratio */
+  display: none;     /* hidden until JS shows it */
+}
+
+</style>
+
+</head>
+<body>
+<button class="tablink" onclick="openPage('Control', this, '#ABB2B9')" id="defaultOpen">Control</button>
+<button class="tablink" onclick="openPage('Files_manager', this, '#B2BABB')">Files</button>
+<button class="tablink" onclick="openPage('Print', this, '#B2BABB')">Print</button>
+<button class="tablink" onclick="openPage('WiFi', this, 'orange')">WiFi</button>
+<!-- <button class="tablink" onclick="openPage('Converter', this, 'blue')">converter</button> -->
+<!-- <button class="tablink" onclick="openPage('About', this, 'orange')">About</button> -->
+
+<div id="Control" class="tabcontent">
+    <h2>
+		<div class="grid-container" style="grid-template-columns: 50% 50%;">
+		<div>Electrical Values</div>
+		<div>Generator Controls</div>
+		</div>
+    </h2>
+    <div class="grid-container" style="grid-template-columns: 3% 50% 40%;"> 
+		<div></div>
+        <div> <!-- contains the electrical values table -->
+            <table>
+			  <tr><th></th></tr>
+              <tr>
+                <th>
+					<textarea id="Current" name="Current" rows="3" cols="15">              [0.0, 0.0] mA </textarea>
+				</th>
+                 <th>
+					<textarea id="HV_Voltage" name="HV_Voltage" rows="3" cols="15">              [0.0, 0.0] V </textarea>
+				</th>
+                <th>
+					<textarea id="DR_Voltage" name="DR_Voltage" rows="3" cols="15">              [0.0, 0.0] V </textarea>
+				</th>
+			  </tr>
+			</table>
+		</div>
+        <div> <!-- contains the generator controls -->
+            <table>
+              <tr>
+                <th></th>
+                <th> <input type="range" id="CURRENTSET" min="0" max="100" value="10"> </th>
+                <th> <p>Iout: <span id="CURRENTSETINDICATOR"></span></p> </th>
+                <th></th>
+              </tr>
+              <tr>
+                <th><label class="switch">
+                  <input type="checkbox" checked id="GENVOLT">
+                  <span class="slider round"></span>
+                </label>
+                </th>
+                <th>
+                <p id="Gtext" style="display:block ; text-align:left">200 V</p>
+                <p id="Gtext1" style="display:none ; text-align:left">130 V</p>
+                </th>
+                <th><label class="switch">
+                  <input type="checkbox" id="GENSTATE">
+                  <span class="slider round"></span>
+                </label>
+                </th>
+                <th>
+                <p id="Gtext2" style="display:none ; text-align:left">ON</p>
+                <p id="Gtext3" style="display:block ; text-align:left">OFF</p></th>
+              </tr>
+            </table>
+        </div>
+    </div>
+	
+    <h2>
+    <div class="grid-container" style="grid-template-columns: 50% 50%;">
+    <div>Printer Controls </div>
+    <div>Pump Controls</div>
+    </div>
+    </h2>
+
+    <div class="grid-container" style="grid-template-columns: 32% 20% 1% 40%;">
+        <div>
+            <table>
+              <tr>
+                <th></th>
+                <th><button class="small_button" id="PRINTER_BACK">BACK</button></th>
+                <th></th>
+              </tr>
+              <tr>
+                <td><button class="small_button" id="PRINTER_LEFT">LEFT</button></td>
+                <td><button class="small_button" id="PRINTER_HOMEXY">HOME XY</button></td>
+                <td><button class="small_button" id="PRINTER_RIGHT">RIGHT</button></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><button class="small_button" id="PRINTER_FORWARD">FORWARD</button></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><button class="small_button" id="PRINTER_SET_ZERO">SET ZERO</button></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><button class="small_button" id="PRINTER_AUTO_ZERO">AUTO ZERO</button></td>
+                <td></td>
+              </tr>
+            </table>
+        </div>
+
+        <div>
+            <table>
+              <tr>
+                <th><button class="small_button" id="PRINTER_UP">UP</button></th>
+              </tr>
+              <tr>
+                <th><button class="small_button" id="PRINTER_HOMEZ">HOME Z</button></th>
+              </tr>
+              <tr>
+                <th><button class="small_button" id="PRINTER_DOWN">DOWN</button></th>
+              </tr>
+            </table>
+        </div>
+
+        <div></div>
+
+        <div>
+            <table>
+              <tr>
+                <th></th>
+                <th> <input type="range" id="PUMPSPEED" min="1" max="100" value="50"> </th>
+                <th> <p>Speed: <span id="PUMPSPEEDINDICATOR"></span></p> </th>
+                <th></th>
+              </tr>
+              <tr>
+                <th><label class="switch">
+                  <input type="checkbox" checked id="PUMPDIR">
+                  <span class="slider round"></span>
+                </label>
+                </th>
+                <th>
+                <p id="text" style="display:block ; text-align:left">FORWARD</p>
+                <p id="text1" style="display:none ; text-align:left">REVERSE</p>
+                </th>
+                <th><label class="switch">
+                  <input type="checkbox" id="PUMPSTATE">
+                  <span class="slider round"></span>
+                    </label>
+                </th>
+                <th>
+                <p id="text2" style="display:none ; text-align:left">RUNNING</p>
+                <p id="text3" style="display:block ; text-align:left">STOPPED</p></th>
+              </tr>
+            </table>
+        </div>
+    </div>
+	<br>
+	<form id="StepSelectorForm"> <!-- contains the printer steps size -->
+    <div class="grid-container" style="grid-template-columns: 8% 10% 5% 5% 5% 5% 10%;"> 
+		<div></div>
+		<div>
+			Move size (mm)
+		</div>
+		<div>
+			<input type="radio" id="SizeA" name="Step" value="0.1" checked>
+			<label for="SizeA">0.1</label><br>
+		</div>
+        <div> 
+			  <input type="radio" id="SizeB" name="Step" value="1">
+			  <label for="SizeB">1</label><br> 
+		</div>
+		<div>
+			  <input type="radio" id="SizeC" name="Step" value="10">
+			  <label for="SizeC">10</label><br>
+		</div>
+		<div>
+			  <input type="radio" id="SizeD" name="Step" value="100">
+			  <label for="SizeD">100</label><br><br>
+		</div>
+    </div>
+    </form>
+    <div class="grid-container" style="grid-template-columns: 25% 50% 25%;">
+     <div></div>
+     <div>
+      <button type="button button3" class="button button3" 
+      id="SHUTDOWN"> SHUTDOWN SYSTEM </button>            
+     </div>
+     <div></div>
+    </div>
+
+</div>
+
+<div id="Files_manager" class="tabcontent">
+    <h2>
+    <div class="grid-container" style="grid-template-columns:50% 50%;">
+    <div>Files Management</div>
+    <div id="LocalFileTranslate">Local File translate</div>
+    </div>
+    </h2>
+   <div class="grid-container" style="grid-template-columns: 50% 50%;">
+    <div> 
+    <fieldset> <!-- buttons for remote and local file load -->
+        <div></div>
+        <div> 
+           <p style="margin-bottom: 5rem;">
+            <input class="button button3" type="file" id="myRemFile" name="myRemFile"/>
+           </p>
+           <p style="margin-bottom: 5rem;">
+            <button class="button button3" style="font-size:21px;" id="UPLOAD">REMOTE UPLOAD </button>
+           </p>
+           <p style="margin-bottom: 5rem;">
+            <label for="myLocFile">Select local file for processing</label>
+            <select id="myLocFile" name="myLocFile">
+              <option value="" disabled selected>— loading… —</option>
+            </select>   
+           </p>     
+        </div>
+        <div></div>
+     </fieldset> 
+    </div>
+    <div>
+     <fieldset id="TranslatorParametersFieldset"> <!-- Converters parameters setting -->
+            <legend>Inputs</legend>
+
+            <label for="TRA_PumpSpeed">Set Pump speed</label>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <input id="TRA_PumpSpeed" name="TRA_PumpSpeed" type="range"
+                     min="0" max="100" step="1" value="50"
+                     oninput="TRA_PumpSpeedValue.textContent=this.value">
+              <span id="TRA_PumpSpeedValue">50</span>
+            </div>
+
+            <label for="TRA_MoveSpeed">Set Etch Movement Speed (mm/min)</label>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <input id="TRA_MoveSpeed" name="TRA_MoveSpeed" type="range"
+                     min="0" max="100" step="1" value="50"
+                     oninput="TRA_MoveSpeedValue.textContent=this.value">
+              <span id="TRA_MoveSpeedValue">50</span>
+            </div>
+
+            <label for="TRA_NozzleCurrent">Set Etch Current (mA)</label>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <input id="TRA_NozzleCurrent" name="TRA_NozzleCurrent" type="range"
+                     min="0" max="100" step="1" value="50"
+                     oninput="TRA_NozzleCurrentValue.textContent=this.value">
+              <span id="TRA_NozzleCurrentValue">50</span>
+            </div>
+
+            <label for="TRA_NumberOfPasses">How many passes?</label>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <input id="TRA_NumberOfPasses" name="TRA_NumberOfPasses" type="range"
+                     min="0" max="10" step="1" value="2"
+                     oninput="TRA_NumberOfPassesValue.textContent=this.value">
+              <span id="TRA_NumberOfPassesValue">2</span>
+            </div>
+
+            <label for="TRA_PumpDir">Pump Direction</label>
+            <div class="toggle-wrapper">
+              <span class="toggle-label">Fwd</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="TRA_PumpDir" name="TRA_PumpDir" value="Fwd">
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">Rev</span>
+            </div>
+
+            <label for="TRA_X_mirror">X Mirror?</label>
+            <div class="toggle-wrapper">
+              <span class="toggle-label">No</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="TRA_X_mirror" name="TRA_X_mirror" value="False">
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">Yes</span>
+            </div>
+
+            <label for="TRA_Y_mirror">Y Mirror?</label>
+            <div class="toggle-wrapper">
+              <span class="toggle-label">No</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="TRA_Y_mirror" name="TRA_Y_mirror" value="False">
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">Yes</span>
+            </div>
+
+            <label for="TRA_GEN_SET_HV">Generator Voltage</label>
+            <div class="toggle-wrapper">
+              <span class="toggle-label">130</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="TRA_GEN_SET_HV" name="TRA_GEN_SET_HV" value="130">
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">200</span>
+            </div>
+
+
+            <button id="sendBtn2" class="button button3" type="button button3" disabled>Send</button>
+            <button id="resetBtn2" class="button button3" type="button button3" >Reset to default values</button>    
+            <button id="translateFile" dataset-fileReady="false" data-paramReady="false" class="button button3" type="button button3" disabled>Generate Gcode</button>
+     </fieldset>
+    </div>
+   </div>
+   <!-- here we wanty to have a link to an image, initially disabled -->
+   <div class="grid-container" style="grid-template-columns: 25% 50% 25%;">
+        <div></div>
+        <div>
+            <img id="preview" alt="Generated image preview" />
+            <br>
+            <p style="margin-bottom: 5rem;">
+            <button onclick="showPreview('test2.png')" class="button button3" style="font-size:21px;" id="SHOW_IMAGE">Show Preview </button>
+            </p>
+        </div>
+        <div></div>
+    </div>
+</div>
+
+<div id="Print" class="tabcontent">
+    <h2>
+    <div class="grid-container" style="grid-template-columns:50% 50%;">
+    <div id="LocalFilePrint">Local File Print</div>
+    </div>
+    <div></div>
+    </h2>
+    <div class="grid-container" style="grid-template-columns: 50% 50%;">
+     <div>
+            <button type="button button3" disabled class="button button3" 
+            id="STARTPRINT"> INITIATE PRINT </button>
+            <button type="button button3" disabled class="button button3" 
+            d="STOPPRINT"> STOP PRINT </button>
+            <button type="button button3" disabled class="button button3" 
+            id="ABORTPRINT"> ABORT PRINT </button>
+     </div> 
+     <div></div>
+    </div>
+</div>
+        
+<div id="WiFi" class="tabcontent">
+  <h3>WiFi Selection</h3>
+  <label for="ssidSelect">Wi‑Fi network (SSID)</label>
+  <select id="ssidSelect">
+    <option value="" selected disabled>Select a network</option>
+  </select>
+
+  <label for="password">Password</label>
+  <input id="password" type="password" placeholder="Enter Wi‑Fi password" />
+
+  <br>
+  <button id="sendBtn">Send to device</button>
+
+  <div id="status" style="margin-top: 12px;">Waiting…</div>
+
+</div>
+
+<div id="About" class="tabcontent">
+  <h3>About</h3>
+  <p>Nothing to see here.</p></div>
+
+<div id="Contact" class="tabcontent">
+  <h3>Contact</h3>
+  <p>Get in touch, or swing by for a cup of coffee.</p>
+</div>
+
+
+<script>
+    // default values in a single part of the document
+    const DefPumpSpeed=50;
+    const DefMoveSpeed=20;
+    const DefNozzleCurrent=45;
+    const DefNumberOfPasses=2;
+
+<!-- let ws = new WebSocket("ws://raspberrypi2b.local:8080"); -->
+const wsHost = window.location.hostname || "raspberrypi2b.local";
+const wsPort = 8080;
+const wsUrl = `ws://${wsHost}:${wsPort}`;
+let ws = new WebSocket(wsUrl);
+
+
+
+// ——— Helper: log lines to the UI
+function log(msg) {
+  const el = document.getElementById('log');
+  const time = new Date().toLocaleTimeString();
+  el.textContent = `[${time}] ${msg}\n` + el.textContent;
+}
+
+// function triggered when websocket is opened
+ws.addEventListener('open', () => {
+        document.getElementById("sendBtn2").disabled = false;
+        console.log("WebSocket connected");
+      });
+
+// this handles the request (in form of a GET from the pump to register its IP)
+
+window.addEventListener("load", function () {
+    console.log("load Event Listener triggered");
+    // Assume your WebSocket connection is already created like:
+    // const ws = new WebSocket("ws://raspberrypi2b.local:8080");
+
+    // 1. Parse query string
+    const params = new URLSearchParams(window.location.search);
+    const msg = params.get("msg");
+    const ip = params.get("ip");
+
+    if (msg && ip) {
+        const payload = {
+            msg: msg,
+            ip: ip
+        };
+
+        // 2. Wait for WebSocket to be open, then send
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(payload));
+        } else {
+            ws.addEventListener("open", () => {
+                ws.send(JSON.stringify(payload));
+            });
+         }
+
+        // 3. Optional: Show confirmation to user or log it
+        console.log("Forwarded via WebSocket:", payload);
+    } else {
+        console.log("Missing query parameters in URL");
+    }
+});
+
+
+function openPage(pageName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+  // set the whole page background
+  document.body.style.backgroundColor = color;
+  
+// Specific action for the WiFi tab, when the tab is selected, a request is sent
+// to the backend with text “RequestWifiList” to get from it the list of available
+// wifi networks for moving from AP to Wifi mode.
+  if (pageName === "WiFi") {
+    requestWifiList();
+  }
+
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+// Setup the reaction functions for each page element
+document.getElementById("STARTPRINT").onclick = send_data;
+document.getElementById("SHUTDOWN").onclick = send_data;
+document.getElementById("PUMPSTATE").onclick = send_data;
+document.getElementById("PUMPDIR").onclick = send_data;
+document.getElementById("PUMPSPEED").onchange = send_data;
+document.getElementById("GENSTATE").onclick = send_data;
+document.getElementById("GENVOLT").onclick = send_data;
+document.getElementById("CURRENTSET").onchange = send_data;
+//document.getElementById("PRINTABLEFILES").onchange = send_data;
+document.getElementById("UPLOAD").onclick = send_data;
+document.getElementById("PRINTER_UP").onclick = send_data;
+document.getElementById("PRINTER_DOWN").onclick = send_data;
+document.getElementById("PRINTER_HOMEZ").onclick = send_data;
+document.getElementById("PRINTER_LEFT").onclick = send_data;
+document.getElementById("PRINTER_RIGHT").onclick = send_data;
+document.getElementById("PRINTER_FORWARD").onclick = send_data;
+document.getElementById("PRINTER_BACK").onclick = send_data;
+document.getElementById("PRINTER_HOMEXY").onclick = send_data;
+document.getElementById("PRINTER_SET_ZERO").onclick = send_data;
+document.getElementById("PRINTER_AUTO_ZERO").onclick = send_data;
+document.getElementById("translateFile").onclick = send_data;
+document.getElementById("StepSelectorForm").onchange = set_step;
+document.getElementById("myLocFile").onchange = local_file_selected;
+
+// Added August 11th 2025 for WiFi netowrk selection
+document.getElementById("password").onclick = function() {
+  console.log("Password field clicked");
+};
+
+document.getElementById("sendBtn").onclick = function() {
+  const ssid = document.getElementById("ssidSelect").value;
+  const password = document.getElementById("password").value;
+
+  if (!ssid) {
+    document.getElementById("status").textContent = "Please choose a Wi‑Fi network.";
+    return;
+  }
+
+  const msg = { type: "wifi_config", ssid: ssid, password: password };
+  ws.send(JSON.stringify(msg));
+  document.getElementById("status").textContent = "Sent Wi‑Fi credentials.";
+};
+
+// Function to request Wi-Fi list
+function requestWifiList() {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send("RequestWifiList");
+    console.log("Requested Wi-Fi list");
+  } else {
+    console.error("WebSocket not open. Cannot request Wi-Fi list.");
+  }
+}
+
+// End of 11th August addition 
+
+
+var step = 0.1
+function set_step(){
+ const data=document.getElementById("StepSelectorForm").elements ;
+ for (let i = 0; i < data.length; i++) { // avoid the first element
+	if(data[i].checked == true) {
+	step=data[i].value
+	//alert("Step selected is: "+step)	
+	}
+ }
+}
+
+var slider = document.getElementById("PUMPSPEED");
+var output = document.getElementById("PUMPSPEEDINDICATOR");
+var slider1 = document.getElementById("CURRENTSET");
+var output1 = document.getElementById("CURRENTSETINDICATOR");
+output.innerHTML = slider.value;
+output1.innerHTML = slider1.value;
+
+function get_data() {
+    ws.send("request_messages");
+}
+
+function send_data(){
+    switch(window.event.target.id) {
+        case "PRINTER_UP":
+        case "PRINTER_DOWN":
+        case "PRINTER_LEFT":
+        case "PRINTER_RIGHT":
+        case "PRINTER_BACK":
+        case "PRINTER_FORWARD":
+		// step contains the selected movement size via the radio buttons
+		ws.send(window.event.target.id+": "+step)
+        //alert("PRINTER MOVE: "+window.event.target.id+" by: "+step) ;
+        break ;
+        case "PRINTER_HOMEXY":
+        case "PRINTER_HOMEZ":
+        case "PRINTER_SET_ZERO":
+        case "PRINTER_AUTO_ZERO":
+		ws.send(window.event.target.id)
+        // alert("PRINTER MOVE: "+window.event.target.id) ;
+        break ;
+		// pump controls
+        case "PUMPSPEED":
+        document.getElementById("PUMPSPEEDINDICATOR").innerHTML=window.event.target.value ;
+		ws.send("PUMP_SET_SPEED: "+window.event.target.value)
+		//alert("PUMP SPEED SET TO: "+window.event.target.value) ;
+        break
+        case "PUMPSTATE":
+        if (window.event.target.checked == true) {
+          text2.style.display = "block";
+          text3.style.display = "none" ; }
+        else {
+          text3.style.display = "block";
+          text2.style.display = "none" ; }
+		ws.send("PUMP_SET_RUN: "+window.event.target.checked)
+		//alert(window.event.target.id+": "+window.event.target.checked);
+        break ;
+        case "PUMPDIR":
+        if (window.event.target.checked == true) {
+          text.style.display = "block";
+          text1.style.display = "none" ; }
+        else {
+          text1.style.display = "block";
+          text.style.display = "none" ; }
+		ws.send("PUMP_SET_DIR: "+window.event.target.checked)
+		//alert(window.event.target.id+": "+window.event.target.checked);
+        break ;
+		// gen controls
+		case "CURRENTSET":
+        document.getElementById("CURRENTSETINDICATOR").innerHTML=window.event.target.value ;
+		ws.send("GEN_SET_CURRENT: "+window.event.target.value)
+		//alert("CURRENT VALUE SET TO: "+window.event.target.value) ;
+        break
+        case "GENSTATE":
+        if (window.event.target.checked == true) {
+          Gtext2.style.display = "block";
+          Gtext3.style.display = "none" ; }
+        else {
+          Gtext3.style.display = "block";
+          Gtext2.style.display = "none" ; }
+		ws.send("GEN_SET_RUN: "+window.event.target.checked)
+		//alert(window.event.target.id+": "+window.event.target.checked);
+        break ;
+        case "GENVOLT":
+        if (window.event.target.checked == true) {
+          Gtext.style.display = "block";
+          Gtext1.style.display = "none" ; }
+        else {
+          Gtext1.style.display = "block";
+          Gtext.style.display = "none" ; }
+		 ws.send("GEN_SET_HV: "+window.event.target.checked)
+		//alert(window.event.target.id+": "+window.event.target.checked);
+        break ;
+		// print controls
+        case "STARTPRINT":
+        ws.send("START_PRINT: "+"COMMAND")
+        break ;
+        // shutdown command
+		case "SHUTDOWN":
+        ws.send("SHUTDOWN_SYSTEM: "+"COMMAND")
+        //alert("PRESSED: "+window.event.target.id);
+        break ;
+        // command to start the translator (only after parameters are set)
+        case "translateFile":
+        ws.send("TRANSLATE: "+"COMMAND")
+        console.log("Translator command issued to server")
+        break ;
+        case "PRINTABLEFILES":
+        ws.send("SELECT: "+document.getElementById("PRINTABLEFILES").value)
+        //alert("Selected: "+window.event.target.value);
+		if(window.event.target.value == "V0") {
+			document.getElementById("STARTPRINT").setAttribute("disabled","disabled") }
+		else {
+			document.getElementById("STARTPRINT").removeAttribute("disabled"); }
+        break ;
+        case "UPLOAD" :
+        /* here we actually transmit only the file index in our list (corresponding to the index on the server) 
+        and not the actual file name */
+        //alert("UPLOAD: "+document.getElementById('myRemFile').value.replace("C:\\fakepath\\","" )+document.getElementById('myRemFile').files[0].name)        
+        ws.send("FILE_NAME: "+document.getElementById('myRemFile').value.replace("C:\\fakepath\\","" ))
+        // the next command sends the actual file content (works for text files only...)
+        ws.send(document.getElementById('myRemFile').files[0])
+        alert("File sent")
+        console.log("Local file sent to server")
+        // then issues again the request for DIR command to the server (check format)
+        ws.send("BUTTON_2: ")
+        break ;
+        default:
+        alert("Called by: "+window.event.target.id) ;    
+    }
+}
+
+function populateNetworks(list) {
+  ssidSelect.innerHTML = '';
+  if (!Array.isArray(list) || list.length === 0) {
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = 'No networks found';
+    ssidSelect.appendChild(opt);
+    ssidSelect.disabled = true;
+    return;
+  }
+  ssidSelect.disabled = false;
+  list.sort((a,b) => (b.rssi ?? 0) - (a.rssi ?? 0) || String(a.ssid).localeCompare(String(b.ssid)));
+  for (const net of list) {
+    const opt = document.createElement('option');
+    opt.value = net.ssid;
+    opt.textContent = net.ssid; // security/RSSI appended if present
+    ssidSelect.appendChild(opt);
+  }
+}
+
+function populateSelectFromObject(selectEl, obj) {
+  selectEl.innerHTML = "";
+  // inserts default "- select -" option
+  const ph = document.createElement("option");
+  ph.value = "";
+  ph.textContent = "— select —";
+  ph.disabled = true;
+  ph.selected = true;
+  selectEl.appendChild(ph);
+  // adds as many options as needed.
+  for (const [key, label] of Object.entries(obj)) {
+    const opt = document.createElement("option");
+    opt.value = label;     // sends filename directly
+    opt.textContent = label;
+    selectEl.appendChild(opt);
+  }
+}
+
+
+<!-- let ws = new WebSocket("ws://127.0.0.1:8080"); -->
+<!-- let ws = new WebSocket("ws://raspberrypi2b.local:8080"); -->
+ws.onmessage = function(message) {
+    let index = message.data.indexOf("DIR: ");
+    let index_1 = message.data.indexOf("ELECTRICALS: ");
+    let index_2 = message.data.indexOf("{\"type\": ")
+    if (index==0) { 
+         // from version 20250906 the pull down list contains all the available 
+         // and changes length accordingly.
+         const selectEl = document.getElementById('myLocFile');
+         //alert(message.data)
+         const jsonPart = message.data.slice(5); // remove "DIR: "
+         raw=jsonPart.trim().replace(/^\uFEFF/, "");
+         //alert(raw)
+         const msg = JSON.parse(raw);
+         //alert(JSON.stringify(msg, null, 2));
+         const options = (msg && typeof msg === 'object' && !Array.isArray(msg) && msg.values && typeof msg.values === 'object')
+             ? msg.values
+             : msg;
+         populateSelectFromObject(selectEl, options);
+    }
+    if (index_1==0) { 
+        var myJSON=message.data.substr(13)
+        //alert(myJSON)
+        var myObj = JSON.parse(myJSON)
+        //alert("getting: "+myObj.HV_Voltage+" "+myObj.DR_Voltage+" "+myObj.Current)
+        document.getElementById("HV_Voltage").innerHTML="		"+myObj.HV_Voltage+" V";
+        document.getElementById("DR_Voltage").innerHTML="		"+myObj.DR_Voltage+" V" ;
+        document.getElementById("Current").innerHTML="		"+myObj.Current+" mA";
+    }
+    if (index_2==0) {
+    console.log("network SSIDs received");
+    let msg;
+    try { 
+      msg = JSON.parse(message.data); 
+      } catch { 
+         console.log('Non-JSON message ignored'); 
+         return; 
+         }
+    switch (msg.type) {
+    case 'wifi_scan_result':
+      populateNetworks(msg.networks || []);
+      // statusEl.textContent = `Found ${msg.networks?.length || 0} network(s).`;
+      // statusEl.className = 'status';
+      //log(`scan → ${msg.networks?.length || 0} networks`);
+      break;
+     }
+    }
+}
+
+// triggers when a local file selection is performed
+function local_file_selected(event) {
+  const sel = document.getElementById("myLocFile")
+  const value = sel.value;
+  const parts = value.split(".");
+  const extension = parts.length > 1 ? parts.pop().toLowerCase() : "";
+  // alert("Extension is: "+extension)
+  //alert("You chose: " + value);
+  // sets the translate file or print file in proper ways (if possible)
+  // resets the default state of some labels and buttons
+  document.getElementById("LocalFilePrint").innerHTML = "Local File Print";
+  document.getElementById("LocalFileTranslate").innerHTML = "Local File Translate";
+  document.getElementById("STARTPRINT").disabled=true
+  document.getElementById("translateFile").disabled=true
+  document.getElementById("translateFile").dataset.fileReady="false"
+  // results depend on the file extension  
+  if (extension === "gcode") {
+    console.log("Handle gcode file");
+    document.getElementById("LocalFilePrint").innerHTML = "Print "+value;
+    document.getElementById("STARTPRINT").disabled=false
+    // TODO, activate other functions for printing
+    
+    } else if (extension === "gbr" || extension === "svg") { 
+    console.log("Handle gerber file");
+    document.getElementById("LocalFileTranslate").innerHTML = "Translate "+value;
+    document.getElementById("translateFile").dataset.fileReady="true"
+    if (document.getElementById("translateFile").dataset.paramReady=="true") {
+      document.getElementById("translateFile").disabled=false }
+
+    // TODO, activate other functions for translator    
+    } else {
+    document.getElementById("LocalFilePrint").innerHTML = "Local File Print";
+    document.getElementById("LocalFileTranslate").innerHTML = "Local File Translate";
+    }
+}
+
+// resets all values to Default upon reset button pressure
+    function resetFields() {
+      //alert("Reset Pump Speed: "+document.getElementById("TRA_PumpSpeed").value) // Ok is called.
+      // Reset PumpSpeed 
+      document.getElementById("TRA_PumpSpeed").value = DefPumpSpeed;
+      document.getElementById("TRA_PumpSpeed").dispatchEvent(new Event("input"));
+      // alert("Reset MoveSpeed")
+      // Reset MoveSpeed 
+      document.getElementById("TRA_MoveSpeed").value=DefMoveSpeed;
+      document.getElementById("TRA_MoveSpeed").dispatchEvent(new Event("input"));
+      // alert("Reset Nozzle Current")
+      // Reset NozzleCurrent 
+      document.getElementById("TRA_NozzleCurrent").value=DefNozzleCurrent;
+      document.getElementById("TRA_NozzleCurrent").dispatchEvent(new Event("input"));
+      // Reset NumberOfPasses 
+      document.getElementById("TRA_NumberOfPasses").value=DefNumberOfPasses;
+      document.getElementById("TRA_NumberOfPasses").dispatchEvent(new Event("input"));
+      
+
+      //alert("Reset Toggle")
+
+      // Reset toggles
+      const TRA_PumpDir = document.getElementById("TRA_PumpDir");
+      TRA_PumpDir.checked = false;   // back to Fwd
+      TRA_PumpDir.value   = "Fwd";   // keep JSON consistent
+      //alert("done")
+
+      const TRA_X_mirror = document.getElementById("TRA_X_mirror");
+      TRA_X_mirror.checked = false;   // back to Fwd
+      TRA_X_mirror.value   = "false";   // keep JSON consistent
+      //alert("done")
+
+      const TRA_Y_mirror = document.getElementById("TRA_Y_mirror");
+      TRA_Y_mirror.checked = false;   // back to Fwd
+      TRA_Y_mirror.value   = "false";   // keep JSON consistent
+      //alert("done")
+
+      const TRA_GEN_SET_HV = document.getElementById("TRA_GEN_SET_HV");
+      TRA_GEN_SET_HV.checked = false;   // back to Fwd
+      TRA_GEN_SET_HV.value   = "130";   // keep JSON consistent
+      //alert("done")
+
+      
+    };
+
+// Ensure JSON contains correct string, not just "on"
+    TRA_PumpDir.addEventListener("change", () => {
+      if (TRA_PumpDir.checked) {
+        TRA_PumpDir.value = "Rev";
+      } else {
+        TRA_PumpDir.value = "Fwd";
+      }
+    }) ;
+
+// Ensure JSON contains correct string, not just "on"
+    TRA_X_mirror.addEventListener("change", () => {
+      if (TRA_X_mirror.checked) {
+        TRA_X_mirror.value = "true";
+      } else {
+        TRA_X_mirror.value = "false";
+      }
+    }) ;
+
+// Ensure JSON contains correct string, not just "on"
+    TRA_Y_mirror.addEventListener("change", () => {
+      if (TRA_Y_mirror.checked) {
+        TRA_Y_mirror.value = "true";
+      } else {
+        TRA_Y_mirror.value = "false";
+      }
+    }) ;
+
+// Ensure JSON contains correct string, not just "on"
+    TRA_GEN_SET_HV.addEventListener("change", () => {
+      if (TRA_GEN_SET_HV.checked) {
+        TRA_GEN_SET_HV.value = "200";
+      } else {
+        TRA_GEN_SET_HV.value = "130";
+      }
+    }) ;
+
+
+    document.getElementById('sendBtn2').addEventListener('click', () => {
+      const fields = {};
+      const fs=document.getElementById("TranslatorParametersFieldset");
+
+      //alert("sending translator parameters")
+      //for (const input of document.querySelectorAll('input[name], select[name]'))
+      for (const input of fs.querySelectorAll("input[name], select[name], textarea[name]"))
+      {
+        const { name, type, value } = input;
+        if (type === 'number') {
+          // Convert numeric fields to numbers if possible; otherwise send null
+          const num = value === '' ? null : Number(value);
+          fields[name] = Number.isFinite(num) ? num : null;
+        } else {
+          fields[name] = value;
+        }
+      }
+      //alert("For is done")
+
+      const payload = {
+        type: 'form_submit',
+        button: 'send',
+        fields,
+        sent_at: new Date().toISOString()
+      };
+      //alert("Payload ready")
+
+      ws?.readyState === WebSocket.OPEN
+        ? (ws.send("TRANSLATOR_PARAMETERS: "+JSON.stringify(payload)), console.log('Client → ' + JSON.stringify(payload)))
+        : console.log('Cannot send: socket not open');
+      //alert("Done sending Json translator data") ;
+      
+      // prepares button to start file translation
+      document.getElementById("translateFile").dataset.paramReady="true"
+      if (document.getElementById("translateFile").dataset.fileReady=="true") {
+       document.getElementById("translateFile").disabled=false ;
+      }
+    });
+
+// this function simply activates the image in the Files_manager page
+// that is produced by the translator software
+    function showPreview(filename) {
+      const img = document.getElementById("preview");
+      // cache-busting query param ensures fresh fetch
+      img.src = "/intermediates/" + filename + "?t=" + Date.now();
+      img.style.display = "block";
+    }
+
+
+document.getElementById('resetBtn2').addEventListener('click', resetFields);
+// the following is called as soon as the page loads. to set the correct defaults
+window.addEventListener("DOMContentLoaded", resetFields); 
+
+
+setInterval(get_data, 1000);
+</script>
+</body>
+</html>
