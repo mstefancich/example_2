@@ -1,15 +1,33 @@
 # minimal package dependencies verification
 # deps_bootstrap.py
-import subprocess, sys, os
+import subprocess, sys, os, time, socket
 from pathlib import Path
 
 BASE_DIR =Path('/home/pi') # hardcoded... bad..
 os.chdir(BASE_DIR)
 print("Base dir:", BASE_DIR)
 
-
 REQ_FILE = Path("/home/pi/requirements.txt")
 FLAG_FILE = Path("/home/pi/requirements_satisfied.txt")
+
+def wait_for_dns(host="pypi.org", timeout=120, interval=2):
+    t0 = time.time()
+    i=0
+    while time.time() - t0 < timeout:
+        try:
+            socket.gethostbyname(host)
+            return True
+        except OSError:
+            print("DNS not ready at: ",time.asctime())
+            i=i+1
+            try: # attempting to put something on screen without any library
+                subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", str(i+10), "--y", "130", "--t", ".", "--f", "3"],check=True)
+            except:
+                pass # nevermind...
+
+            time.sleep(interval)
+    print("Timeout while waiting for DNS at:",time.asctime())
+    return False
 
 def ensure_requirements():
     # read current flag
@@ -32,6 +50,7 @@ def ensure_requirements():
         return(-1)
         
     print("Installing/updating dependencies...")
+
     try: # attempting to put something on screen without any library
         subprocess.run(["/home/pi/fbdisplay/clearscreen"],check=True)
         subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "10", "--t", "Updating", "--f", "3"],check=True)
@@ -39,8 +58,20 @@ def ensure_requirements():
         subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "90", "--t", "be patient...", "--f", "3"],check=True)
     except:
         pass # nevermind...
+    # wait up to 1 minute for DNS
+    if not wait_for_dns():
+        print("Network/DNS not ready; skipping requirements install for now")
+        try: # attempting to put something on screen without any library
+            subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "130", "--t", "DNS failure", "--f", "3"],check=True)
+            subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "170", "--t", "Skipping update", "--f", "3"],check=True)
+        except:
+            pass
+        return False
+    
     try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", str(REQ_FILE)])
+        #subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", str(REQ_FILE)])
+        cmd = [sys.executable, "-m", "pip", "install", "--no-input", "-r", str(REQ_FILE)]
+        r = subprocess.run(cmd, check=True, text=True, stdout=sys.stdout, stderr=sys.stderr)
     except Exception as e:
         print("Unable to test for requirements: ",e)
         return(-1)
@@ -67,8 +98,8 @@ import http.client
 import asyncio, json
 from random import uniform as un
 from time import sleep
-import time
-import socket
+#import time
+#import socket
 #subprocess
 import re, datetime, importlib
 
@@ -142,8 +173,8 @@ ModuleProblem=False # will change to true any time a problem appears in import
 # added may 9th 2025 a set of functions handling the SPI display
 try:
     #from local_packages.DisplayFunctions import clearScreen, writeText, displayImage
-    from local_packages import DisplayFunctions
-    print("Display function source: ",DisplayFunctions.__file__)   # full path to the module/package
+    #from local_packages import DisplayFunctions
+    #print("Display function source: ",DisplayFunctions.__file__)   # full path to the module/package
     from local_packages.DisplayFunctions import *
 except Exception as e:
     print("Errors in importing local_packages.DisplayFunctions *: ",e)
@@ -361,10 +392,10 @@ PackageUpdated=False # this is set when any of the necessary packages are instal
 keywords=["BUTTON_1: ","BUTTON_2: ","FILE_NAME: ","SELECT: ",
           "START_PRINT","GEN_SET_","PUMP_SET_","PRINTER_","RequestWifiList",
           "{\"type\":\"wifi_config\"","CallFromPump","SHUTDOWN_SYSTEM",
-          "TRANSLATE: COMMAND", "TRANSLATOR_PARAMETERS: "]
+          "TRANSLATE: COMMAND", "TRANSLATOR_PARAMETERS: ","CHECK_DEPENDENCIES"]
 functions=["BUTTON_1_pressed","DIR_command","Receive_file","Select_local_file",
            "Initiate_print","SetGenerator","SetPump","ControlPrinter","scan_wifi_ssids",
-           "wifi_config","CallFromPump","shutdown_system","translateFile","setTranslatorParameters"]
+           "wifi_config","CallFromPump","shutdown_system","translateFile","setTranslatorParameters","CheckDependencies"]
 
 
 
@@ -1811,6 +1842,13 @@ def CheckAndUpdate():
 
 
 # END AUTOUPDATER
+def checkDependencies(data=""): # does not work... not sure why.
+    try:
+        print("CheckDependencies invoked")
+        ensure_requirements()
+    except Exception as e:
+        print("Exception in CheckDependencies: ",e)
+
 
 def shutdown_system(data=""):
     color=0b0000011111111111
