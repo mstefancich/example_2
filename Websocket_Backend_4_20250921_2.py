@@ -457,21 +457,50 @@ def restart_self_systemd(unit="myscript.service"):
         sleep(3)
     except:
         pass
+    print("trying to restart the process..")
+    try: # attempting to put something on screen without any library
+        subprocess.run(["/home/pi/fbdisplay/clearscreen"],check=True)
+        subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "10", "--t", "Restarting", "--f", "3"],check=True)
+        subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "50", "--t", "be patient...", "--f", "3"],check=True)
+    except:
+        pass # nevermind...
+
     try:
         subprocess.Popen(["/bin/systemctl", "--no-block", "restart", unit])
         sleep(0.2)
         os._exit(0)
     except:
-        clearScreen()
-        writeText("Failed to restart service",text_color=0b0000011111100000,pos=(10,20))
-        writeText("Rebooting the full system",text_color=0b0000011111100000,pos=(40,20))
+        print("Failed to restart..")
+        print("Attempting to reboot")
+        try:
+            clearScreen()
+            writeText("Failed to restart service",text_color=0b0000011111100000,pos=(10,20))
+            writeText("Rebooting the full system",text_color=0b0000011111100000,pos=(40,20))
+        except:
+            try: # attempting to put something on screen without any library
+                subprocess.run(["/home/pi/fbdisplay/clearscreen"],check=True)
+                subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "10", "--t", "Restart failed", "--f", "3"],check=True)
+                subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "50", "--t", "Robooting...", "--f", "3"],check=True)
+            except:
+                pass # nevermind...
         try:
             subprocess.run(["/sbin/shutdown", "-h", "now"], check=True)
         except Exception as e:
             print(f"Shutdown failed: {e}")
-            writeText("Failes shutdown",text_color=0b0000011111100000,pos=(70,20))
-            writeText("Turn system off and on",text_color=0b0000011111100000,pos=(100,20))
-            writeText("manually please...",text_color=0b0000011111100000,pos=(130,20))
+            try:
+                writeText("Failes shutdown",text_color=0b0000011111100000,pos=(70,20))
+                writeText("Turn system off and on",text_color=0b0000011111100000,pos=(100,20))
+                writeText("manually please...",text_color=0b0000011111100000,pos=(130,20))
+            except:
+                try: # attempting to put something on screen without any library
+                    subprocess.run(["/home/pi/fbdisplay/clearscreen"],check=True)
+                    subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "10", "--t", "Reboot failed!", "--f", "3"],check=True)
+                    subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "50", "--t", "Turn off", "--f", "3"],check=True)
+                    subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "90", "--t", "... and ON", "--f", "3"],check=True)
+                    subprocess.run(["/home/pi/fbdisplay/fbtext", "--x", "20", "--y", "130", "--t", "manually", "--f", "3"],check=True)
+                except:
+                    pass # nevermind...
+            
 
 #def ensure_package # Removed from Version 20250921_1
 
@@ -1708,6 +1737,7 @@ def CheckAndUpdate():
     IndexPos=-1
     IndexToRelink=False
     ZipPos=-1
+    ZipToRefresh=False
     
     try:
         CodePos=[x.startswith("Websocket") for x in response].index(True)
@@ -1723,6 +1753,7 @@ def CheckAndUpdate():
     
     try:
         ZipPos=[x.find(".zip")>-1 for x in response].index(True)
+        ZipToRefresh=Updates[ZipPos]
     except:
         pass
 
@@ -1743,7 +1774,7 @@ def CheckAndUpdate():
          # here I need to 'sudo cp {PAGE} /var/www/html/index.html'
         subprocess.run(["cp", response[IndexPos], dst], check=True)
 #    if Updates[2]: # should be a zip file
-    if(ZipPos>-1):
+    if(ZipToRefresh):
         #extension=response[ZipPos].split(".")[-1]
         #if(extension=="zip"):
         print(">Decompressing file: ",response[ZipPos])
