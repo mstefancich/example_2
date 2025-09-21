@@ -1,3 +1,1 @@
-TEMPORARILY DISABLED AvailableFile Websocket_Backend_4_20250921_1.py
-TEMPORARILY DISABLED AvailablePage index_20250920_2.html
-TEMPORARILY DISABLED AvailableExtras archive_20250921_1.zip
+DISABLED AvailableFile Websocket_Backend_4_20250921_2.py
