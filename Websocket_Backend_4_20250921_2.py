@@ -79,7 +79,7 @@ for name in extra_packages:
     try:
         globals()[name] = importlib.import_module(name)  # attach so you can use `requests.get`, etc.
     except Exception as e:
-        print("Unable to import: ",each)
+        print("Unable to import: ",name)
         print("With error: ",e)
  
 # import websockets
